@@ -1,7 +1,29 @@
+
+const fs = require('fs');
+
 class ProductManager {
-  constructor() {
+  constructor(path) {
+    this.path = path;
     this.products = [];
     this.idCounter = 1;
+    this.loadProducts();
+  }
+
+  loadProducts() {
+    try {
+      const data = fs.readFileSync(this.path, 'utf-8');
+      this.products = JSON.parse(data);
+    } catch (error) {
+      console.error('Error al cargar los productos:', error);
+    }
+  }
+
+  saveProducts() {
+    try {
+      fs.writeFileSync(this.path, JSON.stringify(this.products, null, 2), 'utf-8');
+    } catch (error) {
+      console.error('Error al guardar los productos:', error);
+    }
   }
 
   addProduct(title, description, price, thumbnail, code, stock) {
@@ -29,6 +51,7 @@ class ProductManager {
       stock,
     };
     this.products.push(product);
+    this.saveProducts();
   }
 
   getProducts() {
@@ -43,6 +66,32 @@ class ProductManager {
     }
     return product;
   }
+
+  updateProduct(id, updatedFields) {
+    const product = this.products.findIndex((product) => product.id === id);
+    if (product === -1) {
+      console.error('Producto no encontrado.');
+      return;
+    }
+
+    // Mantener el ID original y actualizar loscampos especificados
+    this.products[product] = { ...this.products[product], ...updatedFields };
+    this.saveProducts();
+  }
+
+
+  deleteProduct(id) {
+    const product = this.products.findIndex((product) => product.id === id);
+    if (product === -1) {
+      console.error('Producto no encontrado.');
+      return;
+    }
+
+    // Eliminar el producto del arreglo
+    this.products.splice(product, 1);
+    this.saveProducts();
+  }
+
 }
 
 module.exports = ProductManager;

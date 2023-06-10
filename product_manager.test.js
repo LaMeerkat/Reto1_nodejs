@@ -6,6 +6,77 @@ describe("ProductManager", () => {
   beforeEach(() => {
     productManager = new ProductManager();
   });
+  test("actualizar un producto existente", () => {
+    // Agregar un producto de prueba
+    productManager.addProduct(
+      "Producto 1",
+      "Descripción 1",
+      10,
+      "imagen1.jpg",
+      "ABC123",
+      5
+    );
+
+    // Actualizar el producto agregado
+    const updatedFields = {
+      title: "Producto 1 actualizado",
+      price: 15,
+    };
+    productManager.updateProduct(1, updatedFields);
+
+    // Verificar que el producto se haya actualizado correctamente
+    const product = productManager.getProductById(1);
+    expect(product).toEqual({
+      id: 1,
+      title: "Producto 1 actualizado",
+      description: "Descripción 1",
+      price: 15,
+      thumbnail: "imagen1.jpg",
+      code: "ABC123",
+      stock: 5,
+    });
+  });
+
+  test("no se puede actualizar un producto inexistente", () => {
+    // Intentar actualizar un producto inexistente
+    const updatedFields = {
+      title: "Producto inexistente actualizado",
+      price: 20,
+    };
+    productManager.updateProduct(1, updatedFields);
+
+    // Verificar que no se haya realizado ninguna actualización
+    const product = productManager.getProductById(1);
+    expect(product).toBeUndefined();
+  });
+
+  test("eliminar un producto existente", () => {
+    // Agregar un producto de prueba
+    productManager.addProduct(
+      "Producto 1",
+      "Descripción 1",
+      10,
+      "imagen1.jpg",
+      "ABC123",
+      5
+    );
+
+    // Eliminar el producto agregado
+    productManager.deleteProduct(1);
+
+    // Verificar que el producto se haya eliminado correctamente
+    const product = productManager.getProductById(1);
+    expect(product).toBeUndefined();
+  });
+
+  test("no se puede eliminar un producto inexistente", () => {
+    // Intentar eliminar un producto inexistente
+    productManager.deleteProduct(1);
+
+    // Verificar que no se haya realizado ninguna eliminación
+    const product = productManager.getProductById(1);
+    expect(product).toBeUndefined();
+  });
 
   test("agregar un producto correctamente", () => {
     productManager.addProduct(
