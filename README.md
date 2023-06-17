@@ -32,19 +32,33 @@ Sigue estos pasos para configurar el entorno virtual y ejecutar los tests:
 
   - Indicar la ruta de index.js como modulo de inicio para npm
 
+
+4. Para correr el archivo tenemos
+
+  -primero instalamos las dependencias
+
+  ```shell
+  npm install
+  ```
+
+  -luego tenemos
+
+  ```shell
+  npm install
+  ```
   - Ejecutar el index.ls
 
   ```shell
   node index.js
   ```
+  -Este archvio es un  APIrest asi que tenemos tres peticiones que podmos hacer (basados en el archivo products.json que se comaprte)
 
-4. Si dese correr un test automatico
+    a. http://localhost:8000/products   //lista todos los productos existentes
+    b. http://localhost:8000/products?limit=n  //lista los n primeros prodcutos (n debe de ser un entero)
+    c. http://localhost:8000/products/pid //lista el producto con el id enviado en pid (el cual debe de ser un entero)
 
-  -primero instalamos la dependencia jest
+5. para correr los test
 
-  ```shell
-  npm install --save-dev jest
-  ```
   -Corremos el comando
 
   ```shell
