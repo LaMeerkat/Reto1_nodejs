@@ -51,6 +51,7 @@ app.listen(8000, () => {
 
 
 
+
 /*
 // Agregar algunos productos de ejemplo
 productManager.addProduct("Producto 1", "Descripción 1", 10, "imagen1.jpg", "ABC123", 5);
