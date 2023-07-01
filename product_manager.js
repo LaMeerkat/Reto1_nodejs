@@ -1,11 +1,9 @@
-
 const fs = require('fs');
 
 class ProductManager {
   constructor(path) {
     this.path = path;
     this.products = [];
-    this.idCounter = 1;
     this.loadProducts();
   }
 
@@ -26,29 +24,31 @@ class ProductManager {
     }
   }
 
-  addProduct(title, description, price, thumbnail, code, stock) {
-    // Validar campos obligatorios
-    if (!title || !description || !price || !thumbnail || !code || !stock) {
-      console.error('------------------------------------------------------', '\n', "Todos los campos son obligatorios.");
-      return; // Salir del método sin agregar el producto
-    }
+  generateUniqueID() {
+    const ids = this.products.map((product) => product.id);
+    let newId;
+    do {
+      newId = Math.floor(Math.random() * 1000000).toString();
+    } while (ids.includes(newId));
 
-    // Validar duplicados en el campo "code"
-    const duplicateCode = this.products.some((product) => product.code === code);
-    if (duplicateCode) {
-      console.error('------------------------------------------------------', '\n', "El código ya está en uso.");
-      return; // Salir del método sin agregar el producto
-    }
+    return newId;
+  }
+
+  addProduct(title, description, code, price, status, stock, category, thumbnails) {
+    // Generar un ID único para el producto
+    const id = this.generateUniqueID();
 
     // Agregar el producto al arreglo
     const product = {
-      id: this.idCounter++,
+      id,
       title,
       description,
-      price,
-      thumbnail,
       code,
+      price,
+      status,
       stock,
+      category,
+      thumbnails: Array.isArray(thumbnails) ? thumbnails : []
     };
     this.products.push(product);
     this.saveProducts();
@@ -59,39 +59,34 @@ class ProductManager {
   }
 
   getProductById(id) {
-    const product = this.products.find((product) => product.id === id);
-    if (!product) {
-      console.error('------------------------------------------------------', '\n', "Not found");
-      return; //Salir del método sin encontrar el producto
-    }
-    return product;
+    return this.products.find((product) => product.id === id);
   }
 
   updateProduct(id, updatedFields) {
-    const product = this.products.findIndex((product) => product.id === id);
-    if (product === -1) {
+    const productIndex = this.products.findIndex((product) => product.id === id);
+    if (productIndex === -1) {
       console.error('Producto no encontrado.');
       return;
     }
 
-    // Mantener el ID original y actualizar loscampos especificados
-    this.products[product] = { ...this.products[product], ...updatedFields };
+    // Mantener el ID original y actualizar los campos especificados
+    this.products[productIndex] = { ...this.products[productIndex], ...updatedFields };
     this.saveProducts();
   }
 
-
   deleteProduct(id) {
-    const product = this.products.findIndex((product) => product.id === id);
-    if (product === -1) {
+    const productIndex = this.products.findIndex((product) => product.id === id);
+    if (productIndex === -1) {
       console.error('Producto no encontrado.');
       return;
     }
 
     // Eliminar el producto del arreglo
-    this.products.splice(product, 1);
+    this.products.splice(productIndex, 1);
     this.saveProducts();
   }
-
 }
 
 module.exports = ProductManager;
+
+

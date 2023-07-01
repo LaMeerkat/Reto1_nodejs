@@ -1,52 +1,18 @@
 const express = require('express');
-const ProductManager = require('./product_manager');
-
+const bodyParser = require('body-parser');
+const productRoutes = require('./src/routers/product.router');
+const carRoutes = require('./src/routers/car.router');
 const app = express();
-const productManager = new ProductManager('./products.json');
 
-app.get('/products', (req, res) => {
-  const { limit } = req.query;
-  const products = productManager.getProducts();
+app.use(bodyParser.json());
 
-  if (limit) {
-    const limitedProducts = products.slice(0, parseInt(limit));
-    return res.json(limitedProducts);
-  }
+// Rutas de productos
+app.use('/api/products', productRoutes);
+app.use('/api/cars', carRoutes);
 
-  res.json(products);
+app.listen(8080, () => {
+  console.log('Servidor escuchando en el puerto 8080');
 });
-
-app.get('/products/:pid', (req, res) => {
-  const { pid } = req.params;
-  console.log(typeof parseInt(pid))
-  const product = productManager.getProductById(parseInt(pid));
-
-  if (!product) {
-    return res.status(404).json({ error: 'Product not found' });
-  }
-
-  res.json(product);
-});
-
-app.listen(8000, () => {
-  console.log('Server is running on port 8000');
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
