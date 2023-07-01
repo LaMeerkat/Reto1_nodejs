@@ -63,4 +63,7 @@ Sigue estos pasos para configurar el entorno virtual y ejecutar los tests:
 
   ```shell
   npx jest
+  
   ```
+
+6. Actualizacion se incluyen las rutas para car y se agregan mas peticiones a products, verificar en el codigo.
